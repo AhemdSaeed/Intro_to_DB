@@ -1,33 +1,26 @@
-"""
-A Python script to create the 'alx_book_store' database in MySQL.
-"""
-
+#!/usr/bin/python3
 import mysql.connector
 from mysql.connector import Error
 
+try:
+    # الاتصال بالسيرفر
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="your_password_here"
+    )
 
-def create_database():
-    try:
+    if connection.is_connected():
+        cursor = connection.cursor()
+        # إنشاء قاعدة البيانات (لو مش موجودة)
+        cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
+        print("Database 'alx_book_store' created successfully!")
 
-        connection = mysql.connector.connect(
-            host="localhost", user="root", password="your_password_here"
-        )
+except Error as e:
+    print(f"Error while connecting to MySQL: {e}")
 
-        if connection.is_connected():
-            cursor = connection.cursor()
-            cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-            print("Database 'alx_book_store' created successfully!")
-
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
-
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-            # تأكيد إغلاق الاتصال
-            # print("MySQL connection closed.")
-
-
-if __name__ == "__main__":
-    create_database()
+finally:
+    # إغلاق الاتصال
+    if connection.is_connected():
+        cursor.close()
+        connection.close()
